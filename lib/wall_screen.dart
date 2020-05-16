@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebaseauth/fullscreen_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,11 @@ const String testDevice = "";
 const String adMobID = "ca-app-pub-6325262826298881~9011838322";
 
 class WallScreen extends StatefulWidget {
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
+  WallScreen({this.analytics, this.observer});
+
   @override
   _WallScreenState createState() => _WallScreenState();
 }
@@ -50,6 +57,23 @@ class _WallScreenState extends State<WallScreen> {
     );
   }
 
+  Future<Null> _sendAnalytics() async{
+
+    await widget.analytics.logEvent(
+        name: "tap to full screen",
+      parameters: <String, dynamic>{}
+    );
+
+  }
+
+  Future<Null> _currentScreen() async{
+
+    await widget.analytics.setCurrentScreen(
+        screenName: "Wall Screen",
+      screenClassOverride: "WallScreenOverride"
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +87,8 @@ class _WallScreenState extends State<WallScreen> {
         wallpapersList = dataSnapShot.documents;
       });
     });
+
+    _currentScreen();
   }
 
   @override
@@ -92,6 +118,9 @@ class _WallScreenState extends State<WallScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     child: InkWell(
                       onTap: () {
+
+                        _sendAnalytics();
+
                         createInterstitialAd()
                           ..load()
                           ..show();

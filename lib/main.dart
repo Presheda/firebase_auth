@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseauth/wall_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +14,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
+ static FirebaseAnalytics analytics  = FirebaseAnalytics();
+ static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +26,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: WallScreen(),
+
+      navigatorObservers: <NavigatorObserver>[observer],
+      home: WallScreen(analytics: analytics, observer: observer),
     );
   }
 }
