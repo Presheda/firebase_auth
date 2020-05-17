@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebaseauth/home_screen.dart';
 import 'package:firebaseauth/wall_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
 
       navigatorObservers: <NavigatorObserver>[observer],
-      home: WallScreen(analytics: analytics, observer: observer),
+      home: HomeScreen(analytics: analytics, observer: observer,),
     );
   }
 }
